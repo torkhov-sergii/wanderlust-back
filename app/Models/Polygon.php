@@ -10,4 +10,13 @@ class Polygon extends Model
     use HasFactory;
 
     protected $table = 'polygon';
+
+    protected $fillable = [
+        'parent_id',
+        'depth',
+        'lat',
+        'lon',
+        'radius',
+        'done',
+    ];
 }

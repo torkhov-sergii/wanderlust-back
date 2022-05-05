@@ -15,9 +15,12 @@ class CreatePolygonTable extends Migration
     {
         Schema::create('polygon', function (Blueprint $table) {
             $table->id();
+            $table->integer('parent_id')->nullable();
+            $table->integer('depth')->nullable()->default(0);
             $table->decimal('lat', 10, 7);
-            $table->decimal('lng', 10, 7);
+            $table->decimal('lon', 10, 7);
             $table->integer('radius');
+            $table->boolean('done')->default(0);
             $table->timestamps();
         });
     }

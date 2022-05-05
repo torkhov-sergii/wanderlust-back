@@ -15,6 +15,6 @@ class ScanController extends Controller
 
     public function scan()
     {
-        return $this->scanService->allPolygons();
+        return $this->scanService->scanPolygon();
     }
 }
