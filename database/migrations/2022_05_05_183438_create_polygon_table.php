@@ -20,7 +20,6 @@ class CreatePolygonTable extends Migration
             $table->decimal('lat', 10, 7);
             $table->decimal('lon', 10, 7);
             $table->integer('radius');
-            $table->boolean('done')->default(0);
             $table->timestamps();
         });
     }

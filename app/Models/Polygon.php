@@ -17,6 +17,14 @@ class Polygon extends Model
         'lat',
         'lon',
         'radius',
-        'done',
     ];
+
+    public function types(): belongsToMany
+    {
+        return $this->belongsToMany(Types::class, PolygonType::class, 'polygon_id', 'type_id')
+            ->withPivot([
+                'done',
+            ])
+            ->using(PolygonType::class);
+    }
 }

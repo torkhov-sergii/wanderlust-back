@@ -26,11 +26,18 @@ class ScanService
     {
         /** @var Polygon $polygon */
         $polygon = Polygon::query()
-            ->where('done', 0)
+            ->with(['types' => function($query) {
+                $query->where('done', '=', 0);
+            }])
+            ->whereHas('types', function($query) {
+                $query->where('done', '=', 0);
+            })
             ->first();
 
         if ($polygon) {
-            $places = $this->nearbySearchService->getPlaces($polygon);
+            $firstType = $polygon->types->first();
+
+            $places = $this->nearbySearchService->getPlaces($polygon, $firstType);
 
             // Добавить новые точки в бд
             foreach ($places['results'] as $place) {
@@ -60,7 +67,7 @@ class ScanService
                 $newRadius = $this->get4CircleOverlapRadius($radius);
 
                 foreach ($newPoi as $poi) {
-                    Polygon::query()
+                    $newPolygon = Polygon::query()
                         ->create([
                             'parent_id' => $polygon->id,
                             'depth' => $polygon->depth + 1,
@@ -68,12 +75,16 @@ class ScanService
                             'lon' => $poi->lon,
                             'radius' => $newRadius,
                         ]);
+
+                    $parentPolygon = Polygon::query()->where('id', $newPolygon->parent_id)->first();
+                    $newPolygon->types()->sync($parentPolygon->types);
                 }
             }
 
-            $polygon->update([
-                'done' => 1
-            ]);
+            $firstType->pivot->done = 1;
+            $firstType->pivot->save();
+
+            dump($polygon->id);
         }
     }
 
