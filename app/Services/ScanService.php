@@ -24,51 +24,51 @@ class ScanService
 
     public function scanPolygon()
     {
-        $polygon = Polygon::query()
-            ->first();
-
-        $places = $this->nearbySearchService->get($polygon);
-
-        foreach ($places['results'] as $place) {
-            $data = [
-                'name' => $place['name'],
-                'place_id' => $place['place_id'],
-                'rating' => $place['rating'] ?? null,
-                'ratings_total' => $place['user_ratings_total'] ?? null,
-                'types' => $place['types'] ?? null,
-                'lat' => $place['geometry']['location']['lat'],
-                'lon' => $place['geometry']['location']['lng'],
-            ];
-
-            Places::query()
-                ->firstOrCreate([
-                    'place_id' => $place['place_id'],
-                ], $data);
-        }
-
-        dd($places);
-
+        /** @var Polygon $polygon */
         $polygon = Polygon::query()
             ->where('done', 0)
             ->first();
 
         if ($polygon) {
-            $lat = $polygon->lat;
-            $lon = $polygon->lon;
-            $radius = $polygon->radius;
+            $places = $this->nearbySearchService->getPlaces($polygon);
 
-            $newPoi = $this->get4CircleOverlap($lat, $lon, $radius);
-            $newRadius = $this->get4CircleOverlapRadius($radius);
+            // Добавить новые точки в бд
+            foreach ($places['results'] as $place) {
+                $data = [
+                    'name' => $place['name'],
+                    'place_id' => $place['place_id'],
+                    'rating' => $place['rating'] ?? null,
+                    'ratings_total' => $place['user_ratings_total'] ?? null,
+                    'types' => $place['types'] ?? null,
+                    'lat' => $place['geometry']['location']['lat'],
+                    'lon' => $place['geometry']['location']['lng'],
+                ];
 
-            foreach ($newPoi as $poi) {
-                Polygon::query()
-                    ->create([
-                        'parent_id' => $polygon->id,
-                        'depth' => $polygon->depth + 1,
-                        'lat' => $poi->lat,
-                        'lon' => $poi->lon,
-                        'radius' => $newRadius,
-                    ]);
+                Places::query()
+                    ->firstOrCreate([
+                        'place_id' => $place['place_id'],
+                    ], $data);
+            }
+
+            // Если точек много, углубится
+            if(count($places['results']) === 20) {
+                $lat = $polygon->lat;
+                $lon = $polygon->lon;
+                $radius = $polygon->radius;
+
+                $newPoi = $this->get4CircleOverlap($lat, $lon, $radius);
+                $newRadius = $this->get4CircleOverlapRadius($radius);
+
+                foreach ($newPoi as $poi) {
+                    Polygon::query()
+                        ->create([
+                            'parent_id' => $polygon->id,
+                            'depth' => $polygon->depth + 1,
+                            'lat' => $poi->lat,
+                            'lon' => $poi->lon,
+                            'radius' => $newRadius,
+                        ]);
+                }
             }
 
             $polygon->update([
@@ -98,7 +98,7 @@ class ScanService
 
     //$lat_meters - вверх
     //$lon_meters - вправо
-    private function addDistanceToCord($lat, $lon, $lat_meters = 0, $lon_meters = 0)
+    private function addDistanceToCord($lat, $lon, $lat_meters = 0, $lon_meters = 0): object
     {
         $latCoef = $lat_meters * 0.0000089;
         $lonCoef = $lon_meters * 0.0000089;

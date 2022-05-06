@@ -11,7 +11,7 @@ class NearbySearchService
     const STAT_CLASS_NAME = 'NearbySearchService';
     protected string $url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
-    public function get(Polygon $polygon)
+    public function getPlaces(Polygon $polygon): array
     {
         return $this->request([
             'location'   => implode(',', [$polygon->lat, $polygon->lon]),
