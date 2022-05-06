@@ -2,11 +2,20 @@
 
 namespace App\Services;
 
+use App\Models\Places;
 use App\Models\Polygon;
+use App\Services\Places\NearbySearchService;
 use Illuminate\Database\Eloquent\Collection;
 
 class ScanService
 {
+    protected NearbySearchService $nearbySearchService;
+
+    public function __construct(NearbySearchService $nearbySearchService)
+    {
+        $this->nearbySearchService = $nearbySearchService;
+    }
+
     public function allPolygons(): Collection
     {
         return Polygon::query()
@@ -15,6 +24,30 @@ class ScanService
 
     public function scanPolygon()
     {
+        $polygon = Polygon::query()
+            ->first();
+
+        $places = $this->nearbySearchService->get($polygon);
+
+        foreach ($places['results'] as $place) {
+            $data = [
+                'name' => $place['name'],
+                'place_id' => $place['place_id'],
+                'rating' => $place['rating'] ?? null,
+                'ratings_total' => $place['user_ratings_total'] ?? null,
+                'types' => $place['types'] ?? null,
+                'lat' => $place['geometry']['location']['lat'],
+                'lon' => $place['geometry']['location']['lng'],
+            ];
+
+            Places::query()
+                ->firstOrCreate([
+                    'place_id' => $place['place_id'],
+                ], $data);
+        }
+
+        dd($places);
+
         $polygon = Polygon::query()
             ->where('done', 0)
             ->first();

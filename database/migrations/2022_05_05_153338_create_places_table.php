@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePoiTable extends Migration
+class CreatePlacesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreatePoiTable extends Migration
      */
     public function up()
     {
-        Schema::create('poi', function (Blueprint $table) {
+        Schema::create('places', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
             $table->string('place_id')->nullable();
             $table->integer('rating')->nullable()->default(0);
-            $table->integer('user_ratings_total')->nullable()->default(0);
-            $table->integer('types')->nullable();
+            $table->integer('ratings_total')->nullable()->default(0);
+            $table->json('types')->nullable();
             $table->decimal('lat', 10, 7);
             $table->decimal('lon', 10, 7);
             $table->timestamps();
@@ -33,6 +33,6 @@ class CreatePoiTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('poi');
+        Schema::dropIfExists('places');
     }
 }

@@ -18,7 +18,7 @@ class CreatePolygonSeeder extends Seeder
         DB::table('polygon')->insert([
             'lat' => '48.543859',
             'lon' => '26.496982',
-            'radius' => 1000,
+            'radius' => 100,
         ]);
     }
 }
