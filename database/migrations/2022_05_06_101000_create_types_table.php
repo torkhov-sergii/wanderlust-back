@@ -24,6 +24,7 @@ class CreateTypesTable extends Migration
             $table->integer('polygon_id')->index();
             $table->integer('type_id')->index();
             $table->boolean('done')->default(0);
+            $table->longText('message')->nullable();
             $table->timestamps();
         });
     }

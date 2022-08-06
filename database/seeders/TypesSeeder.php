@@ -14,16 +14,13 @@ class TypesSeeder extends Seeder
      */
     public function run()
     {
-        $types = ['tourist_attraction', 'point_of_interest', 'museum', 'spa'];
+        $types = ['tourist_attraction', 'point_of_interest', 'museum', 'spa', 'park', 'natural_feature'];
 
-        DB::table('types')->insert([
-            'name' => 'tourist_attraction',
-        ]);
-
-        DB::table('types')->insert([
-            'name' => 'point_of_interest',
-        ]);
-
+        foreach ($types as $type) {
+            DB::table('types')->insert([
+                'name' => $type,
+            ]);
+        }
 
         DB::table('polygon_type')->insert([
             'polygon_id' => 1,

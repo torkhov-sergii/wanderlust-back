@@ -15,10 +15,10 @@ return new class extends Migration {
         //
         Schema::create('vendor_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('vendor_service')->index();
-            $table->integer('http_code')->nullable();
-            $table->longText('data')->nullable();
-            $table->longText('message');
+            $table->string('vendor_service')->nullable()->index();
+            $table->integer('http_code')->nullable()->nullable();
+            $table->longText('data')->nullable()->nullable();
+            $table->longText('message')->nullable();
             $table->timestamps();
         });
     }

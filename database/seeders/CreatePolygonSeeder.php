@@ -15,10 +15,16 @@ class CreatePolygonSeeder extends Seeder
      */
     public function run()
     {
+//        DB::table('polygon')->insert([
+//            'lat' => '48.533483',
+//            'lon' => '26.491300',
+//            'radius' => 30000,
+//        ]);
+
         DB::table('polygon')->insert([
-            'lat' => '48.552080',
-            'lon' => '26.484773',
-            'radius' => 100,
+            'lat' => '50.84588',
+            'lon' => '9.70227',
+            'radius' => 5000,
         ]);
     }
 }

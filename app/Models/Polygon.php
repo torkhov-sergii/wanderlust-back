@@ -19,7 +19,7 @@ class Polygon extends Model
         'radius',
     ];
 
-    public function types(): belongsToMany
+    public function types()
     {
         return $this->belongsToMany(Types::class, PolygonType::class, 'polygon_id', 'type_id')
             ->withPivot([

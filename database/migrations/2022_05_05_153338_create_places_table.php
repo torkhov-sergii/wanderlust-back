@@ -17,7 +17,7 @@ class CreatePlacesTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('place_id')->nullable();
-            $table->integer('rating')->nullable()->default(0);
+            $table->decimal('rating', 4, 2)->nullable()->default(0);
             $table->integer('ratings_total')->nullable()->default(0);
             $table->json('types')->nullable();
             $table->decimal('lat', 10, 7);

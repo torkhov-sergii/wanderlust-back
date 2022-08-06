@@ -7,6 +7,7 @@ use App\Models\Types;
 use App\Services\Logs\VendorLogService;
 use Illuminate\Support\Facades\Http;
 
+//https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=48.533483,26.491300&radius=3000&type=tourist_attraction&keyword=museum&key=AIzaSyD3xO6BVrYHeD-sgkUbpEU6UjtWEWpYEdw
 class NearbySearchService
 {
     const STAT_CLASS_NAME = 'NearbySearchService';
@@ -14,11 +15,13 @@ class NearbySearchService
 
     public function getPlaces(Polygon $polygon, Types $type): array
     {
-        return $this->request([
+        $places = $this->request([
             'location'   => implode(',', [$polygon->lat, $polygon->lon]),
             'radius'   => $polygon->radius,
             'type'   => $type->name ?? null,
         ]);
+
+        return $places['results'] ?? [];
     }
 
     protected function request(array $data): array
@@ -32,7 +35,13 @@ class NearbySearchService
         }
         $response->throw();
 
-        return $response->json();
+        $data = $response->json();
+
+        if(isset($data['error_message']) && $data['error_message']) {
+            dd($data['error_message']);
+        }
+
+        return $data;
     }
 
 }
