@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ScanService;
 
-class ScanController extends Controller
+class PageController extends Controller
 {
     protected ScanService $scanService;
 
@@ -15,7 +15,6 @@ class ScanController extends Controller
 
     public function home()
     {
-        dd(4);
         return view('home', [
         ]);
     }

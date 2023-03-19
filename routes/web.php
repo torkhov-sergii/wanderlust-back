@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScanController;
+use App\Http\Controllers\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,4 +15,5 @@ use App\Http\Controllers\ScanController;
 |
 */
 
-Route::match(['get', 'post'], '/scan/', [ScanController::class, 'scan']);
+Route::match(['get'], '/', [PageController::class, 'home']);
+//Route::match(['get', 'post'], '/scan/', [PageController::class, 'scan']);
