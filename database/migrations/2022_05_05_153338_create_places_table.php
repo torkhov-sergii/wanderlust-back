@@ -13,8 +13,9 @@ class CreatePlacesTable extends Migration
      */
     public function up()
     {
-        Schema::create('places', function (Blueprint $table) {
+        Schema::create('place', function (Blueprint $table) {
             $table->id();
+            $table->integer('polygon_id')->index();
             $table->string('name')->nullable();
             $table->string('place_id')->nullable();
             $table->decimal('rating', 4, 2)->nullable()->default(0);
@@ -33,6 +34,6 @@ class CreatePlacesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('places');
+        Schema::dropIfExists('place');
     }
 }

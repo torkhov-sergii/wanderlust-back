@@ -13,15 +13,17 @@ class Polygon extends Model
 
     protected $fillable = [
         'parent_id',
+        'title',
         'depth',
         'lat',
         'lon',
         'radius',
+        'disabled',
     ];
 
     public function types()
     {
-        return $this->belongsToMany(Types::class, PolygonType::class, 'polygon_id', 'type_id')
+        return $this->belongsToMany(Type::class, PolygonType::class, 'polygon_id', 'type_id')
             ->withPivot([
                 'done',
             ])

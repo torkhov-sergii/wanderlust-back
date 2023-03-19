@@ -3,7 +3,7 @@
 namespace App\Services\Places;
 
 use App\Models\Polygon;
-use App\Models\Types;
+use App\Models\Type;
 use App\Services\Logs\VendorLogService;
 use Illuminate\Support\Facades\Http;
 
@@ -13,7 +13,7 @@ class NearbySearchService
     const STAT_CLASS_NAME = 'NearbySearchService';
     protected string $url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
-    public function getPlaces(Polygon $polygon, Types $type): array
+    public function getPlaces(Polygon $polygon, Type $type): array
     {
         $places = $this->request([
             'location'   => implode(',', [$polygon->lat, $polygon->lon]),

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Places;
+use App\Models\Place;
 use App\Models\Polygon;
 use App\Models\Logs;
 use App\Services\Places\NearbySearchService;
@@ -27,6 +27,7 @@ class ScanService
     {
         /** @var Polygon $polygon */
         $polygon = Polygon::query()
+            ->where('disabled', '!=', 1)
             ->with(['types' => function($query) {
                 $query->where('done', '=', 0);
             }])
@@ -52,12 +53,12 @@ class ScanService
                 dump("new places");
                 dump($places);
 
-                $lastPlacesId = Places::query()->max('id') ?? 0;
+                $lastPlacesId = Place::query()->max('id') ?? 0;
                 dump("lastPlacesId: $lastPlacesId" );
 
                 $this->addPlaces($places);
 
-                $addedPlaces = Places::query()->where('id', '>', $lastPlacesId)->get()->toArray();
+                $addedPlaces = Place::query()->where('id', '>', $lastPlacesId)->get()->toArray();
 
                 dump("added places");
                 dump($addedPlaces);
@@ -133,7 +134,7 @@ class ScanService
                 'lon' => $place['geometry']['location']['lng'],
             ];
 
-            Places::query()
+            Place::query()
                 ->firstOrCreate([
                     'place_id' => $place['place_id'],
                 ], $data);

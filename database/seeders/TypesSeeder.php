@@ -17,7 +17,7 @@ class TypesSeeder extends Seeder
         $types = ['tourist_attraction', 'point_of_interest', 'museum', 'spa', 'park', 'natural_feature'];
 
         foreach ($types as $type) {
-            DB::table('types')->insert([
+            DB::table('type')->insert([
                 'name' => $type,
             ]);
         }
