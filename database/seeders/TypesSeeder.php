@@ -14,7 +14,8 @@ class TypesSeeder extends Seeder
      */
     public function run()
     {
-        $types = ['tourist_attraction', 'point_of_interest', 'museum', 'spa', 'park', 'natural_feature'];
+        //all - автозаменяется всеми $types через запятую
+        $types = ['all', 'tourist_attraction', 'point_of_interest', 'museum', 'spa', 'park', 'natural_feature'];
 
         foreach ($types as $type) {
             DB::table('type')->insert([
@@ -24,7 +25,12 @@ class TypesSeeder extends Seeder
 
         DB::table('polygon_type')->insert([
             'polygon_id' => 1,
-            'type_id' => 3,
+            'type_id' => 1,
+        ]);
+
+        DB::table('polygon_type')->insert([
+            'polygon_id' => 1,
+            'type_id' => 2,
         ]);
 
 //        DB::table('polygon_type')->insert([

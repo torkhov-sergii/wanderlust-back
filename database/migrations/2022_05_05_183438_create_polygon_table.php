@@ -15,7 +15,7 @@ class CreatePolygonTable extends Migration
     {
         Schema::create('polygon', function (Blueprint $table) {
             $table->id();
-            $table->integer('parent_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('title')->nullable();
             $table->integer('depth')->nullable()->default(0);
             $table->decimal('lat', 10, 7);
@@ -24,6 +24,13 @@ class CreatePolygonTable extends Migration
             $table->integer('disabled')->default(0);
             $table->text('message')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('polygon', function(Blueprint $table) {
+            $table->foreign('parent_id')
+                ->references('id')
+                ->on('polygon')
+                ->onDelete('cascade');
         });
     }
 

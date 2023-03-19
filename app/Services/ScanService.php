@@ -37,15 +37,13 @@ class ScanService
             ->first();
 
         if ($polygon) {
+            dump("polygon id: $polygon->id");
+
             $radius = $polygon->radius;
 
             $firstType = $polygon->types->first();
-            $firstType->pivot->done = 1;
-            $firstType->pivot->save();
 
             $places = $this->nearbySearchService->getPlaces($polygon, $firstType);
-
-            dump("polygon id: $polygon->id");
 
             //$countPlacesBefore = Places::query()->count('*');
 
@@ -63,57 +61,56 @@ class ScanService
                 dump("Added places");
                 dump($addedPlaces);
 
-                $maxPlaceUserRating = count($addedPlaces) ? max(array_column($addedPlaces, 'ratings_total')) : 0;
+                $maxPlaceRatingTotal = count($addedPlaces) ? max(array_column($addedPlaces, 'ratings_total')) : 0;
 
-                dump("maxPlaceUserRating: $maxPlaceUserRating" );
+                dump("maxPlaceRatingTotal: $maxPlaceRatingTotal" );
 
                 $countAddedPlaces = count($addedPlaces) ?? 0;
 
                 dump("countAddedPlaces: $countAddedPlaces" );
 
                 if(count($places) === 20) {
-                    // radius > 1000 - нет смысла смотреть слишком близко
-                    if( $radius < 5000) {
+                    if ( $radius < 1000 ) {
 //                        Logs::create([
 //                            'message' => "polygon_id: $polygon->id, нет смысла смотреть слишком близко",
 //                        ])->save();
 
                         $polygon->update([
-                            'message' => "нет смысла смотреть слишком близко"
+                            'message' => "Нет смысла смотреть слишком близко"
                         ]);
 
-                        return;
+                        dump("STOP: Нет смысла смотреть слишком близко" );
                     }
-
-                    // maxPlaceUserRating > 100 - рейтинг точек слишком низний
-                    if( $maxPlaceUserRating < 100) {
+                    elseif ( $maxPlaceRatingTotal < 100 ) {
 //                        Logs::create([
 //                            'message' => "polygon_id: $polygon->id, рейтинг точек слишком низний",
 //                        ])->save();
 
                         $polygon->update([
-                            'message' => "рейтинг точек слишком низний"
+                            'message' => "Рейтинг точек слишком низкий"
                         ]);
 
-                        return;
+                        dump("STOP: Рейтинг точек слишком низкий" );
                     }
-
-                    // countAddedPlaces - нет новых точек
-                    if( $countAddedPlaces === 0) {
+                    elseif ( $countAddedPlaces === 0 ) {
 //                        Logs::create([
 //                            'message' => "polygon_id: $polygon->id, нет новых точек",
 //                        ])->save();
 
                         $polygon->update([
-                            'message' => "нет новых точек",
+                            'message' => "Нет новых точек",
                         ]);
 
-                        return;
+                        dump("STOP: Нет новых точек" );
                     }
-
-                    $this->addPolygon($polygon, $firstType);
+                    else {
+                        $this->addPolygon($polygon, $firstType);
+                    }
                 }
             }
+
+            $firstType->pivot->done = 1;
+            $firstType->pivot->save();
         }
         else {
             dump('fin');

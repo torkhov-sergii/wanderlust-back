@@ -12,6 +12,7 @@
             <th>Title</th>
             <th>Rating</th>
             <th>Reviews</th>
+            <th>Types</th>
         </tr>
 
         @foreach($places as $place)

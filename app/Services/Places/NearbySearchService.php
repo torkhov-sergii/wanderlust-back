@@ -15,6 +15,9 @@ class NearbySearchService
 
     public function getPlaces(Polygon $polygon, Type $type): array
     {
+        $type = $type->title ?? null;
+        if ($type == 'all') $type = Type::all()->pluck('title')->implode(', ');
+
         $places = $this->request([
             'location'   => implode(',', [$polygon->lat, $polygon->lon]),
             'radius'   => $polygon->radius,

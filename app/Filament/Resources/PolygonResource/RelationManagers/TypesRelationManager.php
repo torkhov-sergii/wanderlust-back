@@ -23,6 +23,7 @@ class TypesRelationManager extends RelationManager
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Toggle::make('done')
             ]);
     }
 
@@ -31,8 +32,8 @@ class TypesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('type_id'),
-                Tables\Columns\TextColumn::make('done'),
+                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\BooleanColumn::make('done'),
             ])
             ->filters([
                 //
@@ -42,7 +43,7 @@ class TypesRelationManager extends RelationManager
                 Tables\Actions\AttachAction::make(),
             ])
             ->actions([
-//                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make(),
 //                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\DetachAction::make(),
             ])

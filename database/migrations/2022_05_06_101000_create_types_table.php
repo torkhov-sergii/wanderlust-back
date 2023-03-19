@@ -21,11 +21,25 @@ class CreateTypesTable extends Migration
 
         Schema::create('polygon_type', function (Blueprint $table) {
             $table->id();
-            $table->integer('polygon_id')->index();
-            $table->integer('type_id')->index();
+            $table->unsignedBigInteger('polygon_id')->index();
+            $table->unsignedBigInteger('type_id')->index();
             $table->boolean('done')->default(0);
             $table->longText('message')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('polygon_type', function(Blueprint $table) {
+            $table->foreign('polygon_id')
+                ->references('id')
+                ->on('polygon')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('polygon_type', function(Blueprint $table) {
+            $table->foreign('type_id')
+                ->references('id')
+                ->on('type')
+                ->onDelete('cascade');
         });
     }
 
