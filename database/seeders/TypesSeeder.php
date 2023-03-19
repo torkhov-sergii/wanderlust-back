@@ -18,18 +18,18 @@ class TypesSeeder extends Seeder
 
         foreach ($types as $type) {
             DB::table('type')->insert([
-                'name' => $type,
+                'title' => $type,
             ]);
         }
 
         DB::table('polygon_type')->insert([
             'polygon_id' => 1,
-            'type_id' => 1,
+            'type_id' => 3,
         ]);
 
-        DB::table('polygon_type')->insert([
-            'polygon_id' => 1,
-            'type_id' => 2,
-        ]);
+//        DB::table('polygon_type')->insert([
+//            'polygon_id' => 1,
+//            'type_id' => 2,
+//        ]);
     }
 }

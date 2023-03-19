@@ -23,17 +23,29 @@ class PlaceResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('title')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('place_id')
-                    ->maxLength(255),
+                Forms\Components\TextInput::make('types'),
+
+//                Forms\Components\TextInput::make('place_id')
+//                    ->maxLength(255),
                 Forms\Components\TextInput::make('rating'),
                 Forms\Components\TextInput::make('ratings_total'),
-                Forms\Components\TextInput::make('types'),
-                Forms\Components\TextInput::make('lat')
-                    ->required(),
-                Forms\Components\TextInput::make('lon')
-                    ->required(),
+
+//                Forms\Components\TextInput::make('lat')
+//                    ->required(),
+//                Forms\Components\TextInput::make('lon')
+//                    ->required(),
+
+                Forms\Components\Fieldset::make('Coordinates')
+                    ->schema([
+                        Forms\Components\TextInput::make('lat')
+                            ->required()
+                            ->placeholder('50.0000'),
+                        Forms\Components\TextInput::make('lon')
+                            ->required()
+                            ->placeholder('10.0000'),
+                    ]),
             ]);
     }
 
@@ -41,7 +53,7 @@ class PlaceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('title'),
 //                Tables\Columns\TextColumn::make('place_id'),
                 Tables\Columns\TextColumn::make('rating'),
                 Tables\Columns\TextColumn::make('ratings_total'),

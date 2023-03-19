@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Polygon;
 use App\Services\ScanService;
 
 class PageController extends Controller
@@ -15,12 +16,29 @@ class PageController extends Controller
 
     public function home()
     {
+        $polygons = Polygon::all();
+
         return view('home', [
+            'polygons' => $polygons,
         ]);
     }
 
     public function scan()
     {
-        return $this->scanService->scanPolygon();
+        $this->scanService->scanPolygon();
+
+        return view('scan', [
+        ]);
+    }
+
+    public function polygon($id)
+    {
+        $polygon = Polygon::where('id', $id)->first();
+        $places = $polygon->places()->orderBy('ratings_total', 'desc')->get();
+
+        return view('polygon', [
+            'polygon' => $polygon,
+            'places' => $places,
+        ]);
     }
 }

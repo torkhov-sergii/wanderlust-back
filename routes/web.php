@@ -15,5 +15,11 @@ use App\Http\Controllers\PageController;
 |
 */
 
+//$polygon = \App\Models\Polygon::where('id', 1)->first();
+//dd($polygon);
+//dd($polygon->getRootPolygonId());
+//dd($polygon->places);
+
 Route::match(['get'], '/', [PageController::class, 'home']);
-//Route::match(['get', 'post'], '/scan/', [PageController::class, 'scan']);
+Route::match(['get', 'post'], '/scan/', [PageController::class, 'scan']);
+Route::match(['get'], '/polygon/{id}/', [PageController::class, 'polygon']);

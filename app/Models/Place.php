@@ -12,7 +12,8 @@ class Place extends Model
     protected $table = 'place';
 
     protected $fillable = [
-        'name',
+        'polygon_id',
+        'title',
         'place_id',
         'rating',
         'ratings_total',

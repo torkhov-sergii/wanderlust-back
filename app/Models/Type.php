@@ -12,6 +12,11 @@ class Type extends Model
     protected $table = 'type';
 
     protected $fillable = [
-        'place_id', 'name'
+        'place_id', 'title'
     ];
+
+    public function polygons()
+    {
+        return $this->belongsToMany(Polygon::class, PolygonType::class, 'type_id', 'polygon_id');
+    }
 }

@@ -23,7 +23,7 @@ class ScanService
             ->get();
     }
 
-    public function scanPolygon()
+    public function scanPolygon(): void
     {
         /** @var Polygon $polygon */
         $polygon = Polygon::query()
@@ -50,17 +50,17 @@ class ScanService
             //$countPlacesBefore = Places::query()->count('*');
 
             if ($places) {
-                dump("new places");
+                dump("Found places");
                 dump($places);
 
                 $lastPlacesId = Place::query()->max('id') ?? 0;
-                dump("lastPlacesId: $lastPlacesId" );
+//                dump("lastPlacesId: $lastPlacesId" );
 
-                $this->addPlaces($places);
+                $this->addPlaces($polygon, $places);
 
                 $addedPlaces = Place::query()->where('id', '>', $lastPlacesId)->get()->toArray();
 
-                dump("added places");
+                dump("Added places");
                 dump($addedPlaces);
 
                 $maxPlaceUserRating = count($addedPlaces) ? max(array_column($addedPlaces, 'ratings_total')) : 0;
@@ -79,7 +79,7 @@ class ScanService
 //                        ])->save();
 
                         $polygon->update([
-                            'message' => "polygon_id: $polygon->id, нет смысла смотреть слишком близко"
+                            'message' => "нет смысла смотреть слишком близко"
                         ]);
 
                         return;
@@ -92,7 +92,7 @@ class ScanService
 //                        ])->save();
 
                         $polygon->update([
-                            'message' => "polygon_id: $polygon->id, рейтинг точек слишком низний"
+                            'message' => "рейтинг точек слишком низний"
                         ]);
 
                         return;
@@ -105,7 +105,7 @@ class ScanService
 //                        ])->save();
 
                         $polygon->update([
-                            'message' => "polygon_id: $polygon->id, нет новых точек",
+                            'message' => "нет новых точек",
                         ]);
 
                         return;
@@ -121,11 +121,12 @@ class ScanService
     }
 
     // Добавить новые точки в бд
-    private function addPlaces($places)
+    private function addPlaces($polygon, $places)
     {
         foreach ($places as $place) {
             $data = [
-                'name' => $place['name'],
+                'polygon_id' => $polygon->id,
+                'title' => $place['name'],
                 'place_id' => $place['place_id'],
                 'rating' => $place['rating'] ?? null,
                 'ratings_total' => $place['user_ratings_total'] ?? null,

@@ -16,7 +16,7 @@ class CreatePlacesTable extends Migration
         Schema::create('place', function (Blueprint $table) {
             $table->id();
             $table->integer('polygon_id')->index();
-            $table->string('name')->nullable();
+            $table->string('title')->nullable();
             $table->string('place_id')->nullable();
             $table->decimal('rating', 4, 2)->nullable()->default(0);
             $table->integer('ratings_total')->nullable()->default(0);

@@ -18,7 +18,7 @@ class NearbySearchService
         $places = $this->request([
             'location'   => implode(',', [$polygon->lat, $polygon->lon]),
             'radius'   => $polygon->radius,
-            'type'   => $type->name ?? null,
+            'type'   => $type->title ?? null,
         ]);
 
         return $places['results'] ?? [];

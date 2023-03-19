@@ -17,5 +17,11 @@ class DatabaseSeeder extends Seeder
             CreatePolygonSeeder::class,
             TypesSeeder::class,
         ]);
+
+         \App\Models\User::factory()->create([
+             'name' => 'Admin',
+             'email' => 'torhov.s@gmail.com',
+             'password' => '$2a$12$1Rnq2BWaiSpeVojWw2nMgOLhnZQu2kpmyChFWRvFALUcgZMGjMU9a',
+         ]);
     }
 }

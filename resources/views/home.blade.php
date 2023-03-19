@@ -1,9 +1,16 @@
 @extends('layouts.front')
 
-@section('title', 'Stock')
+@section('title', 'Wanderlust')
 
 @section('content')
 
-    <h3>111</h3>
+    @if(isset($polygons))
+        <h3>Polygons</h3>
+        @foreach($polygons as $polygon)
+            <a href="/polygon/{{ $polygon->id }}/">{{ $polygon->title }}</a>
+        @endforeach
+    @endif
+
+
 
 @endsection

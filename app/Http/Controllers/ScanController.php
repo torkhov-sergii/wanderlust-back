@@ -15,7 +15,6 @@ class ScanController extends Controller
 
     public function home()
     {
-        dd(4);
         return view('home', [
         ]);
     }

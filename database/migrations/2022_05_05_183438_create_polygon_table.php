@@ -22,6 +22,7 @@ class CreatePolygonTable extends Migration
             $table->decimal('lon', 10, 7);
             $table->integer('radius');
             $table->integer('disabled')->default(0);
+            $table->text('message')->nullable();
             $table->timestamps();
         });
     }

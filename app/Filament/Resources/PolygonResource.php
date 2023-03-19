@@ -6,6 +6,7 @@ use App\Filament\Resources\PolygonResource\Pages;
 use App\Filament\Resources\PolygonResource\RelationManagers;
 use App\Models\Polygon;
 use Filament\Forms;
+use Filament\Forms\Components\Card;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -23,96 +24,112 @@ class PolygonResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('Heading')
-                    ->tabs([
-                        Forms\Components\Tabs\Tab::make('Label 1')
-                            ->schema([
-                                Forms\Components\TextInput::make('title')
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Label 2')
+                Card::make()
+                    ->schema([
+                        Forms\Components\TextInput::make('title')->columnSpan('full'),
+
+                        Forms\Components\Card::make()->columns(2)
                             ->schema([
                                 Forms\Components\TextInput::make('lat')
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Label 3')
-                            ->schema([
+                                    ->required()
+                                    ->placeholder('50.0000'),
                                 Forms\Components\TextInput::make('lon')
+                                    ->required()
+                                    ->placeholder('10.0000'),
                             ]),
-                    ]),
 
-                Forms\Components\Grid::make(4)
-                    ->schema([
-                        Forms\Components\TextInput::make('title'),
-                        Forms\Components\TextInput::make('title')->columnSpan(2),
-                        Forms\Components\TextInput::make('title')->columnSpan('full')
-                        // ...
-                    ]),
-
-                Forms\Components\Fieldset::make('555')
-                    ->schema([
-                        Forms\Components\TextInput::make('lat')
+                        Forms\Components\TextInput::make('radius')
                             ->required()
-                            ->placeholder('50.0000'),
-                        Forms\Components\TextInput::make('lon')
-                            ->required()
-                            ->placeholder('10.0000'),
+                            ->placeholder('5000')
+                            ->helperText('Метров (внимание, может быть много точек)'),
+
+                        Forms\Components\Toggle::make('disabled')
+                            ->label('Disabled'),
+
                     ]),
 
-                Forms\Components\Card::make()->columns(2)->schema([
-                    Forms\Components\TextInput::make('title'),
-                    Forms\Components\TextInput::make('title')
-                    // ...
-                ]),
+//                Forms\Components\Tabs::make('Heading')
+//                    ->tabs([
+//                        Forms\Components\Tabs\Tab::make('Label 1')
+//                            ->schema([
+//                                Forms\Components\TextInput::make('title')
+//                            ]),
+//                        Forms\Components\Tabs\Tab::make('Label 2')
+//                            ->schema([
+//                                Forms\Components\TextInput::make('lat')
+//                            ]),
+//                        Forms\Components\Tabs\Tab::make('Label 3')
+//                            ->schema([
+//                                Forms\Components\TextInput::make('lon')
+//                            ]),
+//                    ]),
 
-                Forms\Components\Section::make('Heading')
-                    ->description('Description')
-                    ->columns(4)
-                    ->collapsible()
-                    ->schema([
-                        Forms\Components\TextInput::make('title'),
-                        Forms\Components\TextInput::make('title')
-                    ]),
+//                Forms\Components\Grid::make(4)
+//                    ->schema([
+////                        Forms\Components\TextInput::make('title'),
+////                        Forms\Components\TextInput::make('title')->columnSpan(2),
+//                        Forms\Components\TextInput::make('title')->columnSpan('full')
+//                        // ...
+//                    ]),
+
+//                Forms\Components\Fieldset::make('Coordinates')
+//                    ->schema([
+//                        Forms\Components\TextInput::make('lat')
+//                            ->required()
+//                            ->placeholder('50.0000'),
+//                        Forms\Components\TextInput::make('lon')
+//                            ->required()
+//                            ->placeholder('10.0000'),
+//                    ]),
 
 
-                Forms\Components\TextInput::make('title')
-                    ->required(),
+//                Forms\Components\Section::make('Heading')
+//                    ->description('Description')
+//                    ->columns(4)
+//                    ->collapsible()
+//                    ->schema([
+//                        Forms\Components\TextInput::make('title'),
+//                        Forms\Components\TextInput::make('title')
+//                    ]),
+
+//                Forms\Components\TextInput::make('title')
+//                    ->required(),
 //                Forms\Components\TextInput::make('parent_id')
 //                    ->disabled()
 //                    ->default(null),
 //                Forms\Components\TextInput::make('depth')
 //                    ->disabled()
 //                    ->default(0),
-                Forms\Components\TextInput::make('radius')
-                    ->required()
-                    ->placeholder('5000')
-                    ->helperText('Метров (внимание, может быть много точек)'),
-                Forms\Components\TextInput::make('lat')
-                    ->required()
-                    ->placeholder('50.0000'),
-                Forms\Components\TextInput::make('lon')
-                    ->required()
-                    ->placeholder('10.0000'),
-                Forms\Components\Toggle::make('disabled'),
-                Forms\Components\Repeater::make('types')
-                    ->relationship()
-                    ->schema([
-                        Forms\Components\TextInput::make('name'),
-                        Forms\Components\TextInput::make('done')
-                    ])
-//                    ->disableItemCreation()
-//                    ->disableItemDeletion()
-                    ->collapsible(),
 
-                Forms\Components\MultiSelect::make('types2')
-                    ->relationship('types', 'name')
+//                Forms\Components\TextInput::make('lat')
+//                    ->required()
+//                    ->placeholder('50.0000'),
+//                Forms\Components\TextInput::make('lon')
+//                    ->required()
+//                    ->placeholder('10.0000'),
+
+//                Forms\Components\Repeater::make('types')
+//                    ->relationship()
+//                    ->schema([
+//                        Forms\Components\TextInput::make('name'),
+//                        Forms\Components\TextInput::make('done')
+//                    ])
+////                    ->disableItemCreation()
+////                    ->disableItemDeletion()
+//                    ->collapsible(),
+
+//                Forms\Components\MultiSelect::make('types2')
+//                    ->relationship('types', 'name')
             ]);
+
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('parent_id'),
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('parent_id')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('title')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('depth'),
                 Tables\Columns\TextColumn::make('lat'),
                 Tables\Columns\TextColumn::make('lon'),
@@ -138,6 +155,7 @@ class PolygonResource extends Resource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\PlacesRelationManager::class,
             RelationManagers\TypesRelationManager::class,
         ];
     }
