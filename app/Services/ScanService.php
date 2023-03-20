@@ -5,12 +5,17 @@ namespace App\Services;
 use App\Models\Place;
 use App\Models\Polygon;
 use App\Models\Logs;
+use App\Models\PolygonType;
 use App\Services\Places\NearbySearchService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ScanService
 {
     protected NearbySearchService $nearbySearchService;
+
+    protected $radius = 1500;
+    protected $maxPlaceRatingTotal = 100;
 
     public function __construct(NearbySearchService $nearbySearchService)
     {
@@ -25,6 +30,8 @@ class ScanService
 
     public function scanPolygon(): void
     {
+        $this->showPoligonsToDo();
+
         /** @var Polygon $polygon */
         $polygon = Polygon::query()
             ->where('disabled', '!=', 1)
@@ -43,7 +50,7 @@ class ScanService
 
             $places = $this->nearbySearchService->getPlaces($polygon, $firstType);
 
-            dump("polygon id=$polygon->id, type=$firstType->title");
+            dump("Polygon: id=$polygon->id, type=$firstType->title");
 
             //$countPlacesBefore = Places::query()->count('*');
 
@@ -86,7 +93,7 @@ class ScanService
                 dump("countAddedPlaces: $countAddedPlaces" );
 
                 if(count($places) === 20) {
-                    if ( $radius < 1000 ) {
+                    if ( $this->radius < 1000 ) {
 //                        Logs::create([
 //                            'message' => "polygon_id: $polygon->id, нет смысла смотреть слишком близко",
 //                        ])->save();
@@ -97,7 +104,7 @@ class ScanService
 
                         dump("STOP: Нет смысла смотреть слишком близко" );
                     }
-                    elseif ( $maxPlaceRatingTotal < 100 ) {
+                    elseif ( $this->maxPlaceRatingTotal < 100 ) {
 //                        Logs::create([
 //                            'message' => "polygon_id: $polygon->id, рейтинг точек слишком низний",
 //                        ])->save();
@@ -218,6 +225,26 @@ class ScanService
         $newLon = $lon + $lonCoef / cos($lat * 0.018);
 
         return (object) ['lat' => $newLat, 'lon' => $newLon];
+    }
+
+    private function showPoligonsToDo()
+    {
+        $polygonsTypes = PolygonType::query()
+            ->where('done', 0)
+            ->groupBy('type_id')
+            ->select('type.title', DB::raw('count(*) as total'))
+            ->join('type', 'polygon_type.type_id', 'type.id')
+            ->get()
+            ->toArray();
+
+        $text = [];
+        foreach ($polygonsTypes as $polygonsType) {
+            $text[] = $polygonsType['title'].":".$polygonsType['total'];
+        }
+
+        $text = implode(', ', $text);
+
+        if ($text) dump("TODO: $text");
     }
 
 }

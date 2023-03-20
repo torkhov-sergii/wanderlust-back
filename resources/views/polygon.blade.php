@@ -15,6 +15,7 @@
             <th>Types</th>
             <th>Polygon radius</th>
             <th>Polygon type</th>
+            <th>Polygon depth</th>
         </tr>
 
         @foreach($places as $place)
@@ -26,6 +27,7 @@
                 <td>{{ implode(', ', $place->types) }}</td>
                 <td>{{ $place->polygon->radius }}</td>
                 <td>{{ isset($place->polygon_type) ? $place->polygon_type->title : '' }}</td>
+                <td>{{ $place->polygon->depth }}</td>
             </tr>
         @endforeach
     </table>

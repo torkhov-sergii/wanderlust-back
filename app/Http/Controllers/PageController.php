@@ -44,7 +44,8 @@ class PageController extends Controller
                 foreach ($excludeTags as $tag) {
                     $q->where('types', 'NOT LIKE', '%'.$tag.'%');
                 }
-            });
+            })
+            ->where('ratings_total', '>', 10);
 
         $places = $places_query->get();
 

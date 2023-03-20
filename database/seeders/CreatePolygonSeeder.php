@@ -15,19 +15,7 @@ class CreatePolygonSeeder extends Seeder
      */
     public function run()
     {
-//        DB::table('polygon')->insert([
-//            'lat' => '48.533483',
-//            'lon' => '26.491300',
-//            'radius' => 30000,
-//        ]);
-
-//        DB::table('polygon')->insert([
-//            'title' => 'Test',
-//            'lat' => '50.84588',
-//            'lon' => '9.70227',
-//            'radius' => 5000,
-//        ]);
-
+        // 173 полигона - $radius < 1000, $maxPlaceRatingTotal < 100
         DB::table('polygon')->insert([
             'title' => 'Neustadt 5000',
             'lat' => '49.358',

@@ -28,7 +28,27 @@ class Place extends Model
         'types' => 'array',
     ];
 
-    const EXCLUDE_TAGS = ['shop', 'food', 'store', 'lodging', 'health', 'political', 'parking', 'hair_care', 'post_office', 'electrician'];
+    const EXCLUDE_TAGS = [
+        'shop',
+        'food',
+        'store',
+        'lodging',
+        'health',
+        'political',
+        'parking',
+        'hair_care',
+        'post_office',
+        'electrician',
+        'finance',
+        'gas_station',
+        'travel_agency',
+        'car_wash',
+        'car_repair',
+        'locksmith',
+        'general_contractor',
+        'veterinary_care',
+        'roofing_contractor',
+    ];
 
     public function polygon()
     {
