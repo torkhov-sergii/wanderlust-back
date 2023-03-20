@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Place;
 use App\Models\Polygon;
 use App\Services\ScanService;
 
@@ -33,8 +34,19 @@ class PageController extends Controller
 
     public function polygon($id)
     {
+        $excludeTags = Place::EXCLUDE_TAGS;
+
         $polygon = Polygon::where('id', $id)->first();
-        $places = $polygon->places()->orderBy('ratings_total', 'desc')->get();
+
+        $places_query = $polygon->places()
+            ->orderBy('ratings_total', 'desc')
+            ->where(function($q) use($excludeTags) {
+                foreach ($excludeTags as $tag) {
+                    $q->where('types', 'NOT LIKE', '%'.$tag.'%');
+                }
+            });
+
+        $places = $places_query->get();
 
         return view('polygon', [
             'polygon' => $polygon,

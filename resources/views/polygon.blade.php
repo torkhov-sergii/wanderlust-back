@@ -14,6 +14,7 @@
             <th>Reviews</th>
             <th>Types</th>
             <th>Polygon radius</th>
+            <th>Polygon type</th>
         </tr>
 
         @foreach($places as $place)
@@ -24,6 +25,7 @@
                 <td>{{ $place->ratings_total }}</td>
                 <td>{{ implode(', ', $place->types) }}</td>
                 <td>{{ $place->polygon->radius }}</td>
+                <td>{{ isset($place->polygon_type) ? $place->polygon_type->title : '' }}</td>
             </tr>
         @endforeach
     </table>

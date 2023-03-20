@@ -29,7 +29,7 @@ class CreatePolygonSeeder extends Seeder
 //        ]);
 
         DB::table('polygon')->insert([
-            'title' => 'Neustadt',
+            'title' => 'Neustadt 5000',
             'lat' => '49.358',
             'lon' => '8.099',
             'radius' => 5000,

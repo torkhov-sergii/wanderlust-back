@@ -22,7 +22,7 @@ class NearbySearchService
         $places = $this->request([
             'location'   => implode(',', [$polygon->lat, $polygon->lon]),
             'radius'   => $polygon->radius,
-            'type'   => $type->title ?? null,
+            'type'   => $type,
         ]);
 
         return $places['results'] ?? [];

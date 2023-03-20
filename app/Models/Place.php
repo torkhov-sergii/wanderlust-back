@@ -13,6 +13,7 @@ class Place extends Model
 
     protected $fillable = [
         'root_polygon_id',
+        'polygon_type_id',
         'polygon_id',
         'title',
         'place_id',
@@ -27,8 +28,15 @@ class Place extends Model
         'types' => 'array',
     ];
 
+    const EXCLUDE_TAGS = ['shop', 'food', 'store', 'lodging', 'health', 'political', 'parking', 'hair_care', 'post_office', 'electrician'];
+
     public function polygon()
     {
         return $this->belongsTo(Polygon::class);
+    }
+
+    public function polygon_type()
+    {
+        return $this->belongsTo(Type::class);
     }
 }

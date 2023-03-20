@@ -37,13 +37,13 @@ class ScanService
             ->first();
 
         if ($polygon) {
-            dump("polygon id: $polygon->id");
-
             $radius = $polygon->radius;
 
             $firstType = $polygon->types->first();
 
             $places = $this->nearbySearchService->getPlaces($polygon, $firstType);
+
+            dump("polygon id=$polygon->id, type=$firstType->title");
 
             //$countPlacesBefore = Places::query()->count('*');
 
@@ -52,18 +52,34 @@ class ScanService
                 dump($places);
 
                 $lastPlacesId = Place::query()->max('id') ?? 0;
-//                dump("lastPlacesId: $lastPlacesId" );
 
-                $this->addPlaces($polygon, $places);
+                $this->addPlaces($polygon, $places, $firstType);
 
                 $addedPlaces = Place::query()->where('id', '>', $lastPlacesId)->get()->toArray();
+
+//                // Исключаем если места содержат мусорные теги
+//                $excludeTags = Place::EXCLUDE_TAGS;
+//                $addedPlacesExcluded = [];
+//                foreach ($addedPlaces as $place) {
+//                    if (count(array_intersect($place['types'], $excludeTags)) === 0) {
+//                        $addedPlacesExcluded[] = $place;
+//                    };
+//                }
+
+                // Сортируем по ratings_total
+                usort($addedPlaces, function($a, $b) {
+                    return ($a['ratings_total'] <=> $b['ratings_total']);
+                });
+                $addedPlaces = array_reverse($addedPlaces);
 
                 dump("Added places");
                 dump($addedPlaces);
 
-                $maxPlaceRatingTotal = count($addedPlaces) ? max(array_column($addedPlaces, 'ratings_total')) : 0;
+                $bestPlaceByRatingTotal = $addedPlaces[0] ?? null;
 
-                dump("maxPlaceRatingTotal: $maxPlaceRatingTotal" );
+                dump('bestPlaceByRatingTotal', $bestPlaceByRatingTotal);
+
+                $maxPlaceRatingTotal = $bestPlaceByRatingTotal['ratings_total'] ?? null;
 
                 $countAddedPlaces = count($addedPlaces) ?? 0;
 
@@ -105,6 +121,7 @@ class ScanService
                     }
                     else {
                         $this->addPolygon($polygon, $firstType);
+                        dump("КОПАЕМ ГЛУБЖЕ" );
                     }
                 }
             }
@@ -118,11 +135,14 @@ class ScanService
     }
 
     // Добавить новые точки в бд
-    private function addPlaces($polygon, $places)
+    private function addPlaces($polygon, $places, $polygonType)
     {
+        $root_polygon_id = $polygon->root_polygon_id ?? $polygon->id;
+
         foreach ($places as $place) {
             $data = [
-                'root_polygon_id' => $polygon->root_polygon_id,
+                'root_polygon_id' => $root_polygon_id,
+                'polygon_type_id' => $polygonType->id,
                 'polygon_id' => $polygon->id,
                 'title' => $place['name'],
                 'place_id' => $place['place_id'],
