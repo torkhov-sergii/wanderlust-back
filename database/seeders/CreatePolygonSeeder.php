@@ -32,7 +32,7 @@ class CreatePolygonSeeder extends Seeder
             'title' => 'Neustadt',
             'lat' => '49.358',
             'lon' => '8.099',
-            'radius' => 2000,
+            'radius' => 5000,
         ]);
     }
 }

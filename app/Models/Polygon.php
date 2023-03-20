@@ -13,6 +13,7 @@ class Polygon extends Model
     protected $table = 'polygon';
 
     protected $fillable = [
+        'root_polygon_id',
         'parent_id',
         'title',
         'depth',
@@ -34,22 +35,22 @@ class Polygon extends Model
 
     public function places()
     {
-        return $this->hasMany(Place::class)
-            ->orWhereIn('polygon_id', $this->getSiblingPolygonsIds());
+        return $this->hasMany(Place::class, 'root_polygon_id');
+//            ->orWhereIn('polygon_id', $this->getSiblingPolygonsIds());
     }
 
-    private function getSiblingPolygonsIds()
-    {
-        $rootPolygonId = (isset($this->parent_id)) ? $this->parent_id : $this->id;
-
-        $polygonIds = Polygon::query()
-            ->where('parent_id', $rootPolygonId)
-            ->get()
-            ->pluck('id')
-            ->toArray();
-
-        $polygonIds[] = $rootPolygonId;
-
-        return $polygonIds;
-    }
+//    public function getSiblingPolygonsIds()
+//    {
+//        $rootPolygonId = (isset($this->parent_id)) ? $this->parent_id : $this->id;
+//
+//        $polygonIds = Polygon::query()
+//            ->where('parent_id', $rootPolygonId)
+//            ->get()
+//            ->pluck('id')
+//            ->toArray();
+//
+//        $polygonIds[] = $rootPolygonId;
+//
+//        return $polygonIds;
+//    }
 }

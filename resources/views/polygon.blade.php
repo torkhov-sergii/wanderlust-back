@@ -13,6 +13,7 @@
             <th>Rating</th>
             <th>Reviews</th>
             <th>Types</th>
+            <th>Polygon radius</th>
         </tr>
 
         @foreach($places as $place)
@@ -22,6 +23,7 @@
                 <td>{{ $place->rating }}</td>
                 <td>{{ $place->ratings_total }}</td>
                 <td>{{ implode(', ', $place->types) }}</td>
+                <td>{{ $place->polygon->radius }}</td>
             </tr>
         @endforeach
     </table>

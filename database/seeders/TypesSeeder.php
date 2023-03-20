@@ -15,6 +15,7 @@ class TypesSeeder extends Seeder
     public function run()
     {
         //all - автозаменяется всеми $types через запятую
+        //point_of_interest - возможно убрать
         $types = ['all', 'tourist_attraction', 'point_of_interest', 'museum', 'spa', 'park', 'natural_feature'];
 
         foreach ($types as $type) {

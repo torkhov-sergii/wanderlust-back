@@ -15,6 +15,7 @@ class CreatePolygonTable extends Migration
     {
         Schema::create('polygon', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('root_polygon_id')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('title')->nullable();
             $table->integer('depth')->nullable()->default(0);

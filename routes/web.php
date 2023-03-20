@@ -17,7 +17,7 @@ use App\Http\Controllers\PageController;
 
 //$polygon = \App\Models\Polygon::where('id', 1)->first();
 //dd($polygon);
-//dd($polygon->getRootPolygonId());
+//dd($polygon->getSiblingPolygonsIds());
 //dd($polygon->places);
 
 Route::match(['get'], '/', [PageController::class, 'home']);

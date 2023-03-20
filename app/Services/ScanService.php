@@ -122,6 +122,7 @@ class ScanService
     {
         foreach ($places as $place) {
             $data = [
+                'root_polygon_id' => $polygon->root_polygon_id,
                 'polygon_id' => $polygon->id,
                 'title' => $place['name'],
                 'place_id' => $place['place_id'],
@@ -149,9 +150,12 @@ class ScanService
         $newPoi = $this->get4CircleOverlap($lat, $lon, $radius);
         $newRadius = $this->get4CircleOverlapRadius($radius);
 
+        $root_polygon_id = $polygon->root_polygon_id ?? $polygon->id;
+
         foreach ($newPoi as $poi) {
             $newPolygon = Polygon::query()
                 ->create([
+                    'root_polygon_id' => $root_polygon_id,
                     'parent_id' => $polygon->id,
                     'depth' => $polygon->depth + 1,
                     'lat' => $poi->lat,

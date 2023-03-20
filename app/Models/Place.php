@@ -12,6 +12,7 @@ class Place extends Model
     protected $table = 'place';
 
     protected $fillable = [
+        'root_polygon_id',
         'polygon_id',
         'title',
         'place_id',
@@ -26,4 +27,8 @@ class Place extends Model
         'types' => 'array',
     ];
 
+    public function polygon()
+    {
+        return $this->belongsTo(Polygon::class);
+    }
 }
