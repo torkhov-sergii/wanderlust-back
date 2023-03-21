@@ -2,8 +2,7 @@
 
 namespace App\Services\Logs;
 
-use App\Models\Vendor\Logs;
-use App\Models\Vendor\States;
+use App\Models\Logs;
 
 class VendorLogService
 {

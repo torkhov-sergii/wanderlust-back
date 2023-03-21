@@ -35,10 +35,10 @@ class ScanService
         /** @var Polygon $polygon */
         $polygon = Polygon::query()
             ->where('disabled', '!=', 1)
-            ->with(['types'])
-//            ->with(['types' => function($query) {
-//                $query->where('done', '=', 0);
-//            }])
+//            ->with(['types'])
+            ->with(['types' => function($query) {
+                $query->where('done', '=', 0);
+            }])
             ->whereHas('types', function($query) {
                 $query->where('done', '=', 0);
             })
@@ -53,10 +53,10 @@ class ScanService
 
             dump("Polygon: id=$polygon->id, depth=$polygon->depth, radius=$polygon->radius, type=$firstType->title");
 
-            if ($places) {
-                dump("Found places: ". count($places));
-                //dump($places);
+            dump("Found places: ". count($places));
+            //dump($places);
 
+            if ($places) {
                 $lastPlacesId = Place::query()->max('id') ?? 0;
 
                 $this->addPlaces($polygon, $places, $firstType);
@@ -85,16 +85,16 @@ class ScanService
                     count($places) && (
                         $firstType->title == 'tourist_attraction' && $radius > 35000 ||
                         $firstType->title == 'museum' && $radius > 45000 ||
-                        $firstType->title == 'natural_feature' && $radius > 35000 ||
+                        $firstType->title == 'natural_feature' && $radius > 45000 ||
                         $firstType->title == 'point_of_interest' && $radius > 45000 ||
                         $countAddedPlaces && $radius > 15000 && $maxRatingsTotal >= 50 || // Если добавлены новые точки, копаем до меньшего радиуса
                         (count($places) === 20) && $radius > 2000 && $maxRatingsTotal >= 100 // Германия - ограничить копание даже при 20 точках
                     )
                 ) {
-                    dump("Копаем глубже" );
+                    dump("Копаем глубже"  );
 
                     $firstType->pivot->update([
-                        'message' => "Копаем глубже",
+                        'message' => "GoDeep, radius: ".$radius,
                     ]);
 
                     $this->addPolygon($polygon, $firstType);
@@ -110,7 +110,7 @@ class ScanService
                 'done' => 1,
             ]);
 
-            echo '<script> setTimeout(window.location.reload(), 100); </script>';
+            echo '<script> setTimeout(() => window.location.reload(), 2000); </script>';
         }
         else {
             dump('fin');

@@ -19,7 +19,9 @@ class PageController extends Controller
 
     public function home()
     {
-        $polygons = Polygon::all();
+        $polygons = Polygon::query()
+        ->where('depth', 0)
+        ->get();
 
         return view('home', [
             'polygons' => $polygons,
