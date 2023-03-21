@@ -71,9 +71,9 @@
                         <td>{{ $place->rating }}</td>
                         <td>{{ $place->ratings_total }}</td>
                         <td>{{ implode(', ', $place->getTypes()) }}</td>
-                        <td>{{ $place->polygon->radius }}</td>
+                        <td>{{ $place->polygon && $place->polygon->radius }}</td>
                         <td>{{ isset($place->polygon_type) ? $place->polygon_type->title : '' }}</td>
-                        <td>{{ $place->polygon->depth }}</td>
+                        <td>{{ $place->polygon && $place->polygon->depth }}</td>
                     </tr>
                 @endforeach
             </table>
