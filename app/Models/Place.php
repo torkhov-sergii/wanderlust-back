@@ -48,6 +48,35 @@ class Place extends Model
         'general_contractor',
         'veterinary_care',
         'roofing_contractor',
+        'school',
+        'local_government_office',
+        'plumber',
+        'bar',
+        'insurance_agency',
+        'moving_company',
+        'police',
+        'lawyer',
+        'cemetery',
+        'casino',
+        'library',
+        'art_gallery',
+        'transit_station',
+        'premise',
+        'real_estate_agency',
+        'beauty_salon',
+        'painter',
+        'fire_station',
+        'funeral_home',
+        'laundry',
+        'stadium',
+        'bowling_alley',
+        'movie_theater',
+        'embassy',
+        'hindu_temple',
+        'airport',
+        'car_rental',
+        'storage',
+        'university',
     ];
 
     public function polygon()
@@ -58,5 +87,17 @@ class Place extends Model
     public function polygon_type()
     {
         return $this->belongsTo(Type::class);
+    }
+
+    // exclude "establishment" type
+    public function getTypes()
+    {
+        $types = $this->types;
+
+        if (($key = array_search('establishment', $types)) !== false) {
+            unset($types[$key]);
+        }
+
+        return $types;
     }
 }

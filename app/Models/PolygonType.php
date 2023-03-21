@@ -11,6 +11,9 @@ class PolygonType extends Pivot
     use HasFactory;
 
     protected $fillable = [
-        'done', 'message'
+        'polygon_id',
+        'type_id',
+        'done',
+        'message'
     ];
 }

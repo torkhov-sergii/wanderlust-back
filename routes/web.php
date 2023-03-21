@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\PageController;
@@ -49,6 +50,31 @@ use App\Http\Controllers\PageController;
 //
 //dd($arr);
 
+//$polygon = \App\Models\Polygon::create([
+//    'title' => 'Tunisia South 10000',
+//    'lat' => '32.969',
+//    'lon' => ' 9.655',
+//    'radius' => 10000,
+//]);
+
+//$polygon = \App\Models\Polygon::create([
+//    'title' => 'Tunisia North 170000',
+//    'lat' => '35.809',
+//    'lon' => '9.687',
+//    'radius' => 170000,
+//]);
+//
+//$types = \App\Models\Type::all();
+//foreach ($types as $type) {
+//    \App\Models\PolygonType::create([
+//        'polygon_id' => $polygon->id,
+//        'type_id' => $type->id,
+//    ]);
+//}
+
+// 34.305   9.593 350km
+
 Route::match(['get'], '/', [PageController::class, 'home']);
 Route::match(['get', 'post'], '/scan/', [PageController::class, 'scan']);
 Route::match(['get'], '/polygon/{id}/', [PageController::class, 'polygon']);
+Route::match(['get'], '/types/', [PageController::class, 'types']);

@@ -10,11 +10,14 @@ use App\Services\Places\NearbySearchService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
+// квота - https://console.cloud.google.com/google/maps-apis/quotas?project=torkhov-sergii
+// цена - https://console.cloud.google.com/billing/010F4F-0E410B-9EFAB3/reports/cost-breakdown?project=torkhov-sergii
+
 class ScanService
 {
     protected NearbySearchService $nearbySearchService;
 
-    protected $radius = 1500;
+    protected $minRadius = 2000;
     protected $maxPlaceRatingTotal = 100;
 
     public function __construct(NearbySearchService $nearbySearchService)
@@ -50,13 +53,13 @@ class ScanService
 
             $places = $this->nearbySearchService->getPlaces($polygon, $firstType);
 
-            dump("Polygon: id=$polygon->id, type=$firstType->title");
+            dump("Polygon: id=$polygon->id, depth=$polygon->depth, radius=$polygon->radius, type=$firstType->title");
 
             //$countPlacesBefore = Places::query()->count('*');
 
             if ($places) {
-                dump("Found places");
-                dump($places);
+                dump("Found places: ". count($places));
+//                dump($places);
 
                 $lastPlacesId = Place::query()->max('id') ?? 0;
 
@@ -79,21 +82,40 @@ class ScanService
                 });
                 $addedPlaces = array_reverse($addedPlaces);
 
-                dump("Added places");
-                dump($addedPlaces);
+                dump("Added places: ". count($addedPlaces));
+//                dump($addedPlaces);
 
                 $bestPlaceByRatingTotal = $addedPlaces[0] ?? null;
 
-                dump('bestPlaceByRatingTotal', $bestPlaceByRatingTotal);
+                if ($bestPlaceByRatingTotal) {
+                    dump("bestPlaceByRatingTotal: ".$bestPlaceByRatingTotal['title']." (ratings_total: ".$bestPlaceByRatingTotal['ratings_total'].")");
+                }
 
                 $maxPlaceRatingTotal = $bestPlaceByRatingTotal['ratings_total'] ?? null;
 
                 $countAddedPlaces = count($addedPlaces) ?? 0;
 
-                dump("countAddedPlaces: $countAddedPlaces" );
+                // Запускать углубление насильно (добавил для Туниса, без этого не искало)
+                if (
+                    count($places) && (
+                        $firstType->title == 'tourist_attraction' && $radius > 35000 ||
+                        $firstType->title == 'museum' && $radius > 45000 ||
+                        $firstType->title == 'natural_feature' && $radius > 35000 ||
+                        $firstType->title == 'point_of_interest' && $radius > 45000 ||
+                        $countAddedPlaces && $radius > 15000 && $maxPlaceRatingTotal >= 20 // Добавлены новые точки, копаем до меньшего радиуса
+                    )
+                ) {
+                    dump("Копаем глубже" );
+                    $polygon->update([
+                        'message' => "Копаем глубже",
+                    ]);
 
-                if(count($places) === 20) {
-                    if ( $this->radius < 1000 ) {
+                    $this->addPolygon($polygon, $firstType);
+                }
+
+                // Прерывать углубление (для Германии)
+                if(false && count($places) === 20) {
+                    if ( $radius < $this->minRadius ) {
 //                        Logs::create([
 //                            'message' => "polygon_id: $polygon->id, нет смысла смотреть слишком близко",
 //                        ])->save();
@@ -104,11 +126,7 @@ class ScanService
 
                         dump("STOP: Нет смысла смотреть слишком близко" );
                     }
-                    elseif ( $this->maxPlaceRatingTotal < 100 ) {
-//                        Logs::create([
-//                            'message' => "polygon_id: $polygon->id, рейтинг точек слишком низний",
-//                        ])->save();
-
+                    elseif ( $maxPlaceRatingTotal < $this->maxPlaceRatingTotal ) {
                         $polygon->update([
                             'message' => "Рейтинг точек слишком низкий"
                         ]);
@@ -116,10 +134,6 @@ class ScanService
                         dump("STOP: Рейтинг точек слишком низкий" );
                     }
                     elseif ( $countAddedPlaces === 0 ) {
-//                        Logs::create([
-//                            'message' => "polygon_id: $polygon->id, нет новых точек",
-//                        ])->save();
-
                         $polygon->update([
                             'message' => "Нет новых точек",
                         ]);
@@ -127,14 +141,20 @@ class ScanService
                         dump("STOP: Нет новых точек" );
                     }
                     else {
+                        dump("Копаем глубже" );
+                        $polygon->update([
+                            'message' => "Копаем глубже",
+                        ]);
+
                         $this->addPolygon($polygon, $firstType);
-                        dump("КОПАЕМ ГЛУБЖЕ" );
                     }
                 }
             }
 
             $firstType->pivot->done = 1;
             $firstType->pivot->save();
+
+            echo '<script> window.location.reload(); </script>';
         }
         else {
             dump('fin');

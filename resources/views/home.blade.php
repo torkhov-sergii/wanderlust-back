@@ -7,7 +7,9 @@
     @if(isset($polygons))
         <h3>Polygons</h3>
         @foreach($polygons as $polygon)
-            <a href="/polygon/{{ $polygon->id }}/">{{ $polygon->title }}</a>
+            <div>
+                <a href="/polygon/{{ $polygon->id }}/">{{ $polygon->title }}</a>
+            </div>
         @endforeach
     @endif
 

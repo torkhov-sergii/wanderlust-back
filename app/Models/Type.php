@@ -12,7 +12,8 @@ class Type extends Model
     protected $table = 'type';
 
     protected $fillable = [
-        'place_id', 'title'
+        'place_id',
+        'title'
     ];
 
     public function polygons()

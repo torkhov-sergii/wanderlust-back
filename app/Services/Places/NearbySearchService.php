@@ -7,7 +7,6 @@ use App\Models\Type;
 use App\Services\Logs\VendorLogService;
 use Illuminate\Support\Facades\Http;
 
-// квота - https://console.cloud.google.com/google/maps-apis/quotas?project=torkhov-sergii
 //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=48.533483,26.491300&radius=3000&type=tourist_attraction&keyword=museum&key=AIzaSyD3xO6BVrYHeD-sgkUbpEU6UjtWEWpYEdw
 class NearbySearchService
 {
