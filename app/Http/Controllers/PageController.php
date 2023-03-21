@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Place;
 use App\Models\Polygon;
+use App\Models\Type;
 use App\Services\ScanService;
 use Illuminate\Http\Request;
 
@@ -37,8 +38,9 @@ class PageController extends Controller
     {
         $minRating = $request->get('min_rating') ?? 10;
         $selectedTypes = $request->get('type') ?? null;
+        $selectedStyle = $request->get('style') ?? 'list';
 
-        $excludeTags = Place::EXCLUDE_TAGS;
+        $excludeTags = Type::EXCLUDE_TAGS;
 
         $polygon = Polygon::where('id', $id)->first();
 
@@ -50,7 +52,7 @@ class PageController extends Controller
                 }
             })
             ->where('ratings_total', '>', $minRating)
-            ->where('polygon_type_id', '=', 5);
+            ->where('polygon_type_id', '!=', 50);
 
         if ($selectedTypes) {
             $places_query->where(function($q) use($selectedTypes) {
@@ -70,6 +72,7 @@ class PageController extends Controller
             'types' => $types,
             'selectedTypes' => $selectedTypes,
             'minRating' => $minRating,
+            'selectedStyle' => $selectedStyle,
         ]);
     }
 
@@ -85,7 +88,7 @@ class PageController extends Controller
 
     private function getTypes()
     {
-        $excludeTags = Place::EXCLUDE_TAGS;
+        $excludeTags = Type::EXCLUDE_TAGS;
 
         $types = [];
         $places_query = Place::query()

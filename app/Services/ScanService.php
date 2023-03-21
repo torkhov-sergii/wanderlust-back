@@ -17,9 +17,6 @@ class ScanService
 {
     protected NearbySearchService $nearbySearchService;
 
-    protected $minRadius = 2000;
-    protected $maxPlaceRatingTotal = 100;
-
     public function __construct(NearbySearchService $nearbySearchService)
     {
         $this->nearbySearchService = $nearbySearchService;
