@@ -22,6 +22,8 @@ class Place extends Model
         'types',
         'lat',
         'lon',
+        'created_at',
+        'updated_at',
     ];
 
     protected $casts = [

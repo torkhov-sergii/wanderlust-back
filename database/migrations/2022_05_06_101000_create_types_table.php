@@ -23,7 +23,9 @@ class CreateTypesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('polygon_id')->index();
             $table->unsignedBigInteger('type_id')->index();
-            $table->boolean('done')->default(0);
+            $table->boolean('done')->default(0)->index();
+            $table->integer('added_places')->nullable();
+            $table->integer('max_ratings_total')->nullable();
             $table->longText('message')->nullable();
             $table->timestamps();
         });

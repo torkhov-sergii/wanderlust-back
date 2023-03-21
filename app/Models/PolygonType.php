@@ -14,6 +14,10 @@ class PolygonType extends Pivot
         'polygon_id',
         'type_id',
         'done',
-        'message'
+        'added_places',
+        'max_ratings_total',
+        'message',
+        'created_at',
+        'updated_at',
     ];
 }

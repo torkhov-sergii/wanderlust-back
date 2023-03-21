@@ -15,15 +15,15 @@ class CreatePolygonTable extends Migration
     {
         Schema::create('polygon', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('root_polygon_id')->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->unsignedBigInteger('root_polygon_id')->nullable()->index();
+            $table->unsignedBigInteger('parent_id')->nullable()->index();
             $table->string('title')->nullable();
             $table->integer('depth')->nullable()->default(0);
             $table->decimal('lat', 10, 7);
             $table->decimal('lon', 10, 7);
             $table->integer('radius');
-            $table->integer('disabled')->default(0);
-            $table->text('message')->nullable();
+            $table->integer('disabled')->default(0)->index();
+            //$table->text('message')->nullable();
             $table->timestamps();
         });
 

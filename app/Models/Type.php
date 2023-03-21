@@ -13,7 +13,9 @@ class Type extends Model
 
     protected $fillable = [
         'place_id',
-        'title'
+        'title',
+        'created_at',
+        'updated_at',
     ];
 
     public function polygons()
