@@ -19,6 +19,7 @@ class Place extends Model
         'place_id',
         'rating',
         'ratings_total',
+        'user_rating',
         'types',
         'lat',
         'lon',

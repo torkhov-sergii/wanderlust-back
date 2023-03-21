@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PlaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,5 +77,9 @@ use App\Http\Controllers\PageController;
 
 Route::match(['get'], '/', [PageController::class, 'home']);
 Route::match(['get', 'post'], '/scan/', [PageController::class, 'scan']);
+
 Route::match(['get'], '/polygon/{id}/', [PageController::class, 'polygon']);
+Route::match(['post'], '/place/', [PlaceController::class, 'updateUserRating']);
+
 Route::match(['get'], '/types/', [PageController::class, 'types']);
+

@@ -19,9 +19,10 @@ class CreatePlacesTable extends Migration
             $table->integer('polygon_type_id')->index();
             $table->integer('polygon_id')->index();
             $table->string('title')->nullable();
-            $table->string('place_id')->nullable()->index();
             $table->decimal('rating', 4, 2)->nullable()->default(0)->index();
             $table->integer('ratings_total')->nullable()->default(0)->index();
+            $table->integer('user_rating')->nullable()->default(0)->index();
+            $table->string('place_id')->nullable()->index();
             $table->json('types')->nullable();
             $table->decimal('lat', 10, 7);
             $table->decimal('lon', 10, 7);

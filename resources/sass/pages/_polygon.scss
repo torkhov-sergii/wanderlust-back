@@ -1,0 +1,20 @@
+.polygon__page {
+    .polygon__table {
+        .color_5 {
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .color_4 {
+            background: rgba(0, 255, 34, 0.1);
+        }
+
+        .color_3, .color_2, .color_1 {
+            background: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    #map {
+        height: 600px; /* The height is 400 pixels */
+        width: 100%; /* The width is the width of the web page */
+    }
+}

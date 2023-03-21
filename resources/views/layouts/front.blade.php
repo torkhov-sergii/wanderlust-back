@@ -8,6 +8,9 @@
     <link href="{{ mix('/assets/css/app.css') }}" rel="stylesheet">
 
     @yield('styles')
+
+    <script src="{{ mix('/assets/js/app.js' )}}"></script>
+
 </head>
 <body>
 
@@ -28,8 +31,6 @@
         @include('layouts.partials.footer')
     @show
 </div>
-
-<script src="{{ mix('/assets/js/app.js' )}}"></script>
 
 </body>
 </html>

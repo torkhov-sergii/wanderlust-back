@@ -47,7 +47,6 @@ class PageController extends Controller
         $polygon = Polygon::where('id', $id)->first();
 
         $places_query = $polygon->places()
-            ->orderBy('ratings_total', 'desc')
             ->where(function($q) use($excludeTags) {
                 foreach ($excludeTags as $tag) {
                     $q->where('types', 'NOT LIKE', '%'.$tag.'%');
@@ -62,6 +61,12 @@ class PageController extends Controller
                     $q->orWhereJsonContains('types', $type);
                 }
             });
+        }
+
+        if ($selectedStyle == 'map') {
+            $places_query->orderBy('user_rating', 'asc');
+        } else {
+            $places_query->orderBy('ratings_total', 'desc');
         }
 
         $places = $places_query->get();
