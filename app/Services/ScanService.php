@@ -56,7 +56,7 @@ class ScanService
             dump("Found places: ". count($places));
             //dump($places);
 
-            if ($places) {
+            if (true) {
                 $lastPlacesId = Place::query()->max('id') ?? 0;
 
                 $this->addPlaces($polygon, $places, $firstType);
@@ -80,18 +80,20 @@ class ScanService
                     dump("bestPlaceByRatingTotal: ".$bestPlaceByRatingTotal['title']." (max_ratings_total: ".$maxRatingsTotal.")");
                 }
 
-                // Запускать углубление насильно (добавил для Туниса, без этого не искало)
+                //170000 - 1, 120208 - 4, 84999 - 16, 60103 - 64, 42499 - 256, 30051 - 1024, 21249 - 4096
+                //polygon_type - polygon_id: 9191
                 if (
+                    // Насильно углубляемся, даже если нет точек (добавил для Туниса, без этого не искало)
+                    $firstType->title == 'tourist_attraction' && $radius > 35000 ||
+                    $firstType->title == 'museum' && $radius > 45000 ||
+                    $firstType->title == 'natural_feature' && $radius > 45000 ||
+                    $firstType->title == 'point_of_interest' && $radius > 45000 || // не 35000, потому что много мусора
                     count($places) && (
-                        $firstType->title == 'tourist_attraction' && $radius > 35000 ||
-                        $firstType->title == 'museum' && $radius > 45000 ||
-                        $firstType->title == 'natural_feature' && $radius > 45000 ||
-                        $firstType->title == 'point_of_interest' && $radius > 45000 ||
                         $countAddedPlaces && $radius > 15000 && $maxRatingsTotal >= 50 || // Если добавлены новые точки, копаем до меньшего радиуса
                         (count($places) === 20) && $radius > 2000 && $maxRatingsTotal >= 100 // Германия - ограничить копание даже при 20 точках
                     )
                 ) {
-                    dump("Копаем глубже"  );
+                    dump("Копаем глубже" );
 
                     $firstType->pivot->update([
                         'message' => "GoDeep, radius: ".$radius,
@@ -110,7 +112,7 @@ class ScanService
                 'done' => 1,
             ]);
 
-            echo '<script> setTimeout(() => window.location.reload(), 2000); </script>';
+            echo '<script> setTimeout(() => window.location.reload(), 100); </script>';
         }
         else {
             dump('fin');
