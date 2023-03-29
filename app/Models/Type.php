@@ -72,6 +72,20 @@ class Type extends Model
         'night_club',
     ];
 
+    const INCLUDE_TAGS = [
+        'point_of_interest',
+        'tourist_attraction',
+        'museum',
+        'park',
+        'place_of_worship',
+        'church',
+        'natural_feature',
+        'amusement_park',
+        'zoo',
+        'aquarium',
+        'spa',
+    ];
+
     public function polygons()
     {
         return $this->belongsToMany(Polygon::class, PolygonType::class, 'type_id', 'polygon_id');

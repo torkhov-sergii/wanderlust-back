@@ -46,7 +46,8 @@ class PageController extends Controller
 
     public function polygon(Request $request, $id)
     {
-        $minRating = $request->get('min_rating') ?? 10;
+        $minRating = $request->get('min_rating') ?? 100;
+        $limit = $request->get('limit') ?? 100;
         $selectedTypes = $request->get('type') ?? null;
         $selectedStyle = $request->get('style') ?? 'list';
 
@@ -77,9 +78,11 @@ class PageController extends Controller
             $places_query->orderBy('ratings_total', 'desc');
         }
 
+        $places = $places_query->limit($limit);
+
         $places = $places_query->get();
 
-        $types = $this->getTypes();
+        $types = Type::INCLUDE_TAGS;
 
         return view('polygon', [
             'polygon' => $polygon,
@@ -87,6 +90,7 @@ class PageController extends Controller
             'types' => $types,
             'selectedTypes' => $selectedTypes,
             'minRating' => $minRating,
+            'limit' => $limit,
             'selectedStyle' => $selectedStyle,
         ]);
     }
@@ -114,7 +118,7 @@ class PageController extends Controller
                 }
             });
 
-        $places = $places_query->get();
+        $places = $places_query->limit(20000)->get();
 
         foreach ($places as $place) {
             foreach ($place->types as $type) {

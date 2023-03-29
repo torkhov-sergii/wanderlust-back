@@ -12,11 +12,12 @@
             <input type="radio" name="style" id="style_map" value="map" {{ ($selectedStyle == 'map') ? 'checked' : '' }}> <label for="style_map">map</label>
 
             MinReviews <input type="text" name="min_rating" value="{{ $minRating }}">
+            Limit <input type="text" name="limit" value="{{ $limit }}">
 
             <div>
                 @foreach($types as $key => $type)
-                    <input id="type_{{ $key }}" type="checkbox" name="type[]" value="{{ $key }}" {{ is_array($selectedTypes) && array_search($key, $selectedTypes) !== false ? 'checked' : '' }}>
-                    <label for="type_{{ $key }}">{{ $key }}</label>
+                    <input id="type_{{ $type }}" type="checkbox" name="type[]" value="{{ $type }}" {{ is_array($selectedTypes) && array_search($type, $selectedTypes) !== false ? 'checked' : '' }}>
+                    <label for="type_{{ $type }}">{{ $type }}</label>
                 @endforeach
             </div>
 
