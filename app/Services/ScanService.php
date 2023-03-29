@@ -8,6 +8,7 @@ use App\Models\Logs;
 use App\Models\PolygonType;
 use App\Services\Places\NearbySearchService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 // квота - https://console.cloud.google.com/google/maps-apis/quotas?project=torkhov-sergii
@@ -28,7 +29,7 @@ class ScanService
             ->get();
     }
 
-    public function scanPolygon(): void
+    public function scanPolygon($radius, $root_polygon_id, $reload): void
     {
         $this->showPoligonsToDo();
 
@@ -42,6 +43,8 @@ class ScanService
             ->whereHas('types', function($query) {
                 $query->where('done', '=', 0);
             })
+            ->where('root_polygon_id', $root_polygon_id)
+            ->where('radius', '>', $radius)
             ->first();
 
         if ($polygon) {
@@ -89,8 +92,8 @@ class ScanService
                     $firstType->title == 'natural_feature' && $radius > 45000 ||
                     $firstType->title == 'point_of_interest' && $radius > 45000 || // не 35000, потому что много мусора
                     count($places) && (
-                        $countAddedPlaces && $radius > 15000 && $maxRatingsTotal >= 50 || // Если добавлены новые точки, копаем до меньшего радиуса
-                        (count($places) === 20) && $radius > 2000 && $maxRatingsTotal >= 100 // Германия - ограничить копание даже при 20 точках
+                        $countAddedPlaces && $radius > 30000 && $maxRatingsTotal >= 100 || // Если добавлены новые точки, копаем до меньшего радиуса
+                        (count($places) === 20) && $radius > 20000 && $maxRatingsTotal >= 100 // Германия - ограничить копание даже при 20 точках
                     )
                 ) {
                     dump("Копаем глубже" );
@@ -112,7 +115,7 @@ class ScanService
                 'done' => 1,
             ]);
 
-            echo '<script> setTimeout(() => window.location.reload(), 100); </script>';
+            if ($reload) echo '<script> setTimeout(() => window.location.reload(), 100); </script>';
         }
         else {
             dump('fin');

@@ -28,9 +28,17 @@ class PageController extends Controller
         ]);
     }
 
-    public function scan()
+    public function scan(Request $request)
     {
-        $this->scanService->scanPolygon();
+        $radius = $request->get('radius');
+        $root_polygon_id = $request->get('root_polygon_id');
+        $reload = $request->get('reload');
+
+        if (!$radius) dd('Set get param min "radius", до какого радиуса продолжать');
+        if (!$root_polygon_id) dd('Set get param "root_polygon_id", id страны или корневого полегона');
+        if (!isset($reload)) dd('Set get param "reload", обновлять ли страницу автоматически');
+
+        $this->scanService->scanPolygon($radius, $root_polygon_id, $reload);
 
         return view('scan', [
         ]);
@@ -121,5 +129,32 @@ class PageController extends Controller
         unset($types['establishment']);
 
         return $types;
+    }
+
+    public function countRequests(Request $request)
+    {
+        $radius = $request->get('radius');
+
+        $i = 1;
+        $total_requests = 1;
+        for ($r = $radius; $r > 1000; $r = $r/1.41) {
+
+            $requests[] = [
+                'radius' => round($r),
+                'requests' => $i,
+                'total_requests' => $total_requests,
+            ];
+
+            $i = $i * 4;
+            $total_requests = $total_requests + $i;
+        }
+
+//        $requests[]
+//        dd($requests);
+
+        return view('requests', [
+            'radius' => $radius,
+            'requests' => $requests,
+        ]);
     }
 }
