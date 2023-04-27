@@ -32,6 +32,7 @@ class Polygon extends Model
             ->withPivot([
                 'done',
             ])
+            ->withTimestamps()
             ->using(PolygonType::class);
     }
 

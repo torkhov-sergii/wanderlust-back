@@ -7,16 +7,20 @@ use App\Models\Polygon;
 use App\Models\Logs;
 use App\Models\PolygonType;
 use App\Services\Places\NearbySearchService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 // квота - https://console.cloud.google.com/google/maps-apis/quotas?project=torkhov-sergii
 // цена - https://console.cloud.google.com/billing/010F4F-0E410B-9EFAB3/reports/cost-breakdown?project=torkhov-sergii
+// цена по дням - https://console.cloud.google.com/billing/010F4F-0E410B-9EFAB3/reports?project=torkhov-sergii
 
 class ScanService
 {
     protected NearbySearchService $nearbySearchService;
+    //protected $overlap = 0.5; //4 круга полностью перекрывают всю площадь родительского, однако сильно вылазят по краям за него
+    protected $overlap = 0.45; //по идее немного вылазят и перекрытие не 100%, но экономнее
 
     public function __construct(NearbySearchService $nearbySearchService)
     {
@@ -29,9 +33,18 @@ class ScanService
             ->get();
     }
 
-    public function scanPolygon($radius, $root_polygon_id, $reload): void
+    public function scanPolygon($radius, $root_polygon_id, $reload, $limit_per_day): void
     {
         $this->showPoligonsToDo();
+
+        $today_requests = PolygonType::query()
+            ->where('done', 1)
+            ->whereDate('updated_at', Carbon::today())
+            ->count();
+
+        if ($today_requests > $limit_per_day) {
+            dd('"limit_per_day", лимит API запросов за сегодня');
+        }
 
         /** @var Polygon $polygon */
         $polygon = Polygon::query()
@@ -181,10 +194,10 @@ class ScanService
     //кординаты новых четырех кругов
     private function get4CircleOverlap($lat, $lon, $radius): array
     {
-        $poi_1 = $this->addDistanceToCord($lat, $lon, $radius/2, $radius/2);
-        $poi_2 = $this->addDistanceToCord($lat, $lon, -$radius/2, $radius/2);
-        $poi_3 = $this->addDistanceToCord($lat, $lon, -$radius/2, -$radius/2);
-        $poi_4 = $this->addDistanceToCord($lat, $lon, $radius/2, -$radius/2);
+        $poi_1 = $this->addDistanceToCord($lat, $lon, $radius * $this->overlap, $radius * $this->overlap);
+        $poi_2 = $this->addDistanceToCord($lat, $lon, -$radius * $this->overlap, $radius * $this->overlap);
+        $poi_3 = $this->addDistanceToCord($lat, $lon, -$radius * $this->overlap, -$radius * $this->overlap);
+        $poi_4 = $this->addDistanceToCord($lat, $lon, $radius * $this->overlap, -$radius * $this->overlap);
 
         return [ $poi_1, $poi_2, $poi_3, $poi_4 ];
     }
@@ -192,7 +205,7 @@ class ScanService
     //радиус нового меньшего круга
     private function get4CircleOverlapRadius($radius): int
     {
-        return hypot($radius/2, $radius/2);
+        return hypot($radius * $this->overlap, $radius * $this->overlap);
     }
 
     //$lat_meters - вверх

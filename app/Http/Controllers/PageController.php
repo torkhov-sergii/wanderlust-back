@@ -33,12 +33,14 @@ class PageController extends Controller
         $radius = $request->get('radius');
         $root_polygon_id = $request->get('root_polygon_id');
         $reload = $request->get('reload');
+        $limit_per_day = $request->get('limit_per_day');
 
         if (!$radius) dd('Set get param min "radius", до какого радиуса продолжать');
         if (!$root_polygon_id) dd('Set get param "root_polygon_id", id страны или корневого полегона');
         if (!isset($reload)) dd('Set get param "reload", обновлять ли страницу автоматически');
+        if (!$limit_per_day) dd('Set get param "limit_per_day", лимит API запросов за сегодня');
 
-        $this->scanService->scanPolygon($radius, $root_polygon_id, $reload);
+        $this->scanService->scanPolygon($radius, $root_polygon_id, $reload, $limit_per_day);
 
         return view('scan', [
         ]);

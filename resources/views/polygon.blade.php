@@ -38,7 +38,7 @@
                 ];
             </script>
             <div id="map"></div>
-            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3xO6BVrYHeD-sgkUbpEU6UjtWEWpYEdw&callback=initMap"></script>
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.key') }}&callback=initMap"></script>
         @endif
 
         @if($selectedStyle == 'list')
