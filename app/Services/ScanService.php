@@ -58,6 +58,7 @@ class ScanService
             })
             ->where('root_polygon_id', $root_polygon_id)
             ->where('radius', '>', $radius)
+            ->orderBy('depth', 'asc')
             ->first();
 
         if ($polygon) {
@@ -128,7 +129,7 @@ class ScanService
                 'done' => 1,
             ]);
 
-            if ($reload) echo '<script> setTimeout(() => window.location.reload(), 100); </script>';
+            if ($reload) echo '<script> setTimeout(() => window.location.reload(), 200); </script>';
         }
         else {
             dump('fin');
