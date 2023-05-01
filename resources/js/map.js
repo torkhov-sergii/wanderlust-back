@@ -1,6 +1,8 @@
 $(function(){
     // Initialize and add the map
     function initMap() {
+        let bounds = new google.maps.LatLngBounds();
+
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 2,
             // center: { lat: 48, lng: 10 },
@@ -39,7 +41,11 @@ $(function(){
                 // window.location.href = google_marker.url;
                 window.open(google_marker.url, '_blank');
             });
+
+            bounds.extend(marker.position);
         }
+
+        map.fitBounds(bounds);
     }
 
     if($('#map').length) {

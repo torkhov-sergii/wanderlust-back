@@ -84,3 +84,5 @@ Route::match(['post'], '/place/', [PlaceController::class, 'updateUserRating']);
 Route::match(['get'], '/types/', [PageController::class, 'types']);
 Route::match(['get'], '/count-requests/', [PageController::class, 'countRequests']);
 
+Route::match(['get'], '/polygons-circles/', [PageController::class, 'polygonsCircles']);
+

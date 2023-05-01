@@ -20,7 +20,9 @@ class ScanService
 {
     protected NearbySearchService $nearbySearchService;
     //protected $overlap = 0.5; //4 круга полностью перекрывают всю площадь родительского, однако сильно вылазят по краям за него
-    protected $overlap = 0.45; //по идее немного вылазят и перекрытие не 100%, но экономнее
+    //protected $overlap = 0.45; //0.45 много и следующие круги вылазят за первый
+    protected $overlap = 0.39; //по идее немного вылазят и перекрытие не 100%, но экономнее
+    //protected $overlap = 0.36; //идеально не вылазят, но маловато
 
     public function __construct(NearbySearchService $nearbySearchService)
     {

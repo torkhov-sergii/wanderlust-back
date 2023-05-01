@@ -163,4 +163,20 @@ class PageController extends Controller
             'requests' => $requests,
         ]);
     }
+
+    public function polygonsCircles(Request $request)
+    {
+        $polygons = Polygon::query()
+//            ->orwhere('id', 18001)
+//            ->orwhereIn('id', [18021, 18022, 18023, 18024])
+            ->orWhereIn('root_polygon_id', [18000])
+//            ->orWhereIn('parent_id', [18000])
+            ->orderBy('id', 'asc')
+            ->limit(1000)
+            ->get();
+
+        return view('circles', [
+            'polygons' => $polygons,
+        ]);
+    }
 }
