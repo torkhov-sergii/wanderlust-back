@@ -80,7 +80,7 @@ class PageController extends Controller
             $places_query->orderBy('ratings_total', 'desc');
         }
 
-        $places = $places_query->limit($limit);
+        $places_query->limit($limit);
 
         $places = $places_query->get();
 

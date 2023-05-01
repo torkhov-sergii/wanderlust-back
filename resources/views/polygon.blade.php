@@ -50,7 +50,7 @@
                     <th>Rating</th>
                     <th>Reviews</th>
                     <th>Types</th>
-                    <th>Polygon radius</th>
+{{--                    <th>Polygon radius</th>--}}
                     <th>Polygon type</th>
                     <th>Polygon depth</th>
                 </tr>
@@ -72,7 +72,7 @@
                         <td>{{ $place->rating }}</td>
                         <td>{{ $place->ratings_total }}</td>
                         <td>{{ implode(', ', $place->getTypes()) }}</td>
-                        <td>{{ $place->polygon && $place->polygon->radius }}</td>
+{{--                        <td>{{ $place->polygon && $place->polygon->radius }}</td>--}}
                         <td>{{ isset($place->polygon_type) ? $place->polygon_type->title : '' }}</td>
                         <td>{{ $place->polygon && $place->polygon->depth }}</td>
                     </tr>
